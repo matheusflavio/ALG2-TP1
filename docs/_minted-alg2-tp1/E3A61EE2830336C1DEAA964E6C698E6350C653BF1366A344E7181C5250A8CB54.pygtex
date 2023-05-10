@@ -1,0 +1,6 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n}{Node}\PYG{o}{*}\PYG{+w}{ }\PYG{n}{root}\PYG{p}{;}
+\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n}{nextCode}\PYG{p}{;}
+\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n+nf}{insert}\PYG{p}{(}\PYG{n}{std}\PYG{o}{::}\PYG{n}{string}\PYG{+w}{ }\PYG{n}{word}\PYG{p}{);}\PYG{c+c1}{// Insere uma nova palavra na árvore}
+\PYG{k+kt}{int}\PYG{+w}{ }\PYG{n+nf}{find}\PYG{p}{(}\PYG{n}{std}\PYG{o}{::}\PYG{n}{string}\PYG{+w}{ }\PYG{n}{word}\PYG{p}{);}\PYG{c+c1}{// Procura se a palavra passada se encontra na árvore}
+\end{Verbatim}

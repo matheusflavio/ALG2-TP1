@@ -1,0 +1,5 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{n+nl}{char}\PYG{p}{:}\PYG{+w}{ }\PYG{n}{caracter}\PYG{p}{;}
+\PYG{n+nl}{int}\PYG{p}{:}\PYG{+w}{ }\PYG{n}{code}\PYG{p}{;}
+\PYG{n}{std}\PYG{o}{::}\PYG{n}{unordered\PYGZus{}map}\PYG{o}{\PYGZlt{}}\PYG{k+kt}{char}\PYG{p}{,}\PYG{+w}{ }\PYG{n}{Node}\PYG{o}{*\PYGZgt{}}\PYG{+w}{ }\PYG{n}{children}\PYG{p}{;}\PYG{+w}{ }\PYG{c+c1}{// Armazena os filhos de determinado nó}
+\end{Verbatim}

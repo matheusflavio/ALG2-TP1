@@ -1,0 +1,237 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[brazilian]{babel}
+\usepackage{hyperref}
+\usepackage{lipsum}
+\usepackage{geometry}
+\usepackage[skip=5pt plus1pt, indent=20pt]{parskip}
+\usepackage{indentfirst}
+\usepackage{minted}
+
+\usepackage{amsthm,amssymb,amsmath}
+
+
+\newtheorem*{theorem}{Theorem}
+
+\newcommand{\NN}{\mathbb{N}}
+\newcommand{\ZZ}{\mathbb{Z}}
+\newcommand{\RR}{\mathbb{R}}
+\newcommand{\QQ}{\mathbb{Q}}
+\newcommand{\CC}{\mathbb{C}}
+
+\geometry{left=3cm, top=3cm, right=2cm, bottom=2cm}
+
+\title{\textbf{Algoritmos 2 - Trabalho Prático 1 - Manipulação de sequências}}
+\author{\textbf{Matheus Flávio Gonçalves Silva - 2020006850}}
+\date{\parbox{\linewidth}{\centering%
+    Universidade Federal de Minas Gerais (UFMG)\endgraf
+    Belo Horizonte - MG - Brasil\endgraf\bigskip
+    \href{mailto:matheusfgs@ufmg.br}{matheusfgs@ufmg.br}}}
+
+\begin{document}
+
+\maketitle
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Introdução}
+\par O problema proposto consiste na implementação do algoritmo de compressão LZ78 com a utilização de
+um dicionário e de uma árvore trie, que não precisa ser compacta, para armazenar os prefixos.
+
+\par O trabalho consiste na implementação da função de compressão dos dados de um arquivo .txt
+qualquer de entrada e da descompressão dos dados compactados em um arquivo qualquer de saída. Todos
+os outputs possuem um nome padrão que é o nome original do arquivo de entrada, mas com a devida extensão,
+mas é possível alterar o output por meio da passagem de um argumento para execução do programa.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Instruções de Compilação e execução}
+\par A compilação e execução do programa é feita de acordo com o indicado na documentação de especificação
+do trabalho.
+
+\par \textbf{Compilação:}
+
+\begin{itemize}
+	\item Abra um terminal e acesse a pasta raiz do trabalho;
+	\item Execute o comando
+	      \begin{minted}[
+		]{bash}
+	make
+	\end{minted}
+	      no terminal;
+	\item Com esse comando, são criados alguns \textbf{".o"} intermediários e o arquivo
+	      \textbf{"tp01"} que é o programa compilado e pronto para execução.
+\end{itemize}
+
+\par \textbf{Execução:}
+\begin{itemize}
+	\item Uma vez com o projeto compilado, abra um terminal e acesse a pasta raiz do trabalho;
+	\item Execute o programa com um caso teste com o comando:
+	      \begin{minted}[
+				]{bash}
+	./tp01 -option "arquivo_entrada" -o "arquivo_saida"
+	\end{minted}
+
+	      sem aspas, em que \textbf{'-option'} é ou \textbf{"-c"} ou \textbf{"-x"} para compressão/descompressão, respectivamente. \textbf{'arquivo\_entrada'} se refere à localização/nome de um arquivo de entrada, tanto para compressão quanto para descompressão. A última parte do comando é opicional, e serve para definir o nome do arquivo de saída tanto para compressão quanto para descompressão;
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Implementação}
+
+\par O programa, bibliotecas e cabeçalhos utilizados foram desenvolvidos na linguagem C++,
+sendo utilizado o compilador G++ (com padrão de execução conforme dito na documentação do trabalho, a compilação
+é dada por meio do comando).
+\par O desenvolvimento se deu em um notebook Asus X555UB-BRA-XX299T com processador Core i5 6200u e 8GB de RAM 1333Mhz
+LDDR3 com SSD de 240GB SanDisk em ambiente Linux Mint 21.1. Foi utilizado o Visual Studio Code como IDE para
+desenvolvimento.
+
+\subsection{Estruturas de Dados}
+\par Para a implementação do trabalho foram usados os \textbf{Tipos Abstratos de Dados (TADs)} \textbf{"Node"} e \textbf{"Trie"} para a criação da árvore de prefixos.
+\par Cada uma possui os seguintes atributos:
+\par \textbf{Node:}
+\begin{minted}[]{c++}
+char: caracter;
+int: code;
+std::unordered_map<char, Node*> children; // Armazena os filhos de determinado nó
+    \end{minted}
+\par Cada um dos atributos é utilizado para criar um elemento da árvore trie.
+\par \textbf{Trie:}
+\begin{minted}[]{c++}
+Node* root;
+int nextCode;
+int insert(std::string word);// Insere uma nova palavra na árvore
+int find(std::string word);// Procura se a palavra passada se encontra na árvore
+\end{minted}
+
+\subsection{Funções e Procedimentos}
+\subsubsection{Arquivo node.cpp}
+\begin{itemize}
+	\item \textbf{Node(char caracter, int code)}: cria um novo nó
+\end{itemize}
+
+\subsubsection{Arquivo trie.cpp}
+\begin{itemize}
+	\item \textbf{int Trie::insert(std::string word)}: Insere uma palvra à árvore. Sempre procura se os prefixos que formam a palavra já se encontram. Adiciona apenas o que previamente não estava na árvore.
+	\item \textbf{int Trie::find(std::string word)}: Procura por uma palavra na árvore. Retorna código -1 caso a palavra não seja encontrada e retorna o código do nó caso seja o último nó da palavra.
+
+\end{itemize}
+
+\subsubsection{Arquivo lz78.cpp}
+\begin{itemize}
+	\item \textbf{void compression(string filename, string output)}: Realiza a operação de compressão do texto passado como argumento.
+	      Utiliza ifstream e ofstream para leitura e escrita de arquivos. Faz uso de diversas funções padrões e da funções definidas anteriormente nos outros arquivos.
+	      Além disso, faz uso de variáveis de auxílio.
+	\item \textbf{void decompression(string filename, string output)}: Realiza a operação de descompressão do texto passado como argumento.
+	      Utiliza ifstream e ofstream para leitura e escrita de arquivos. Faz uso de diversas funções padrões e da funções definidas anteriormente nos outros arquivos.
+	      Além disso, faz uso de variáveis de auxílio.
+\end{itemize}
+
+
+\subsubsection{Arquivo main.cpp}
+\begin{itemize}
+	\item \textbf{opcaoInvalida()}: Imprime no console que foi passada uma configuração errada de entrada.
+	\item \textbf{void compressionReport(string inputName, std::pair<double,double>values)}: Imprime no console que
+	os valores teóricos de compressão segundo o método do LZ78. Não reflete o resultado real com tamanho de arquivos.
+\end{itemize}
+\par O programa principal cria uma série de variáveis de auxílio para a execução do algoritmo.
+É o responsável por definir qual operação será realizada e quais os nomes dos arquivos que serão manipulados.
+Além disso, imprime no terminal as informações a respeito da compressão dos arquivos, considerando que os bits têm tamanho 8 e que o tamanho da compressão é dado pela dimensão da árvore.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\section{Análise de Complexidade}
+\par A complexidade média estimada da criação da Trie é O(M * N) para a compressão, em que M é o número de
+palavras do arquivo e N é o comprimento médio das palavras. Como os textos são textos reais, espera-se que 
+esse tamanho médio em geral se aproxime à média de tamanho das palavras mais comumente utilizadas na 
+língua em que foi escrito.. A complexidade do programa de descompressão varia linearmente com o
+tamanho do arquivo, dado que a reconstrução a partir do dicionário é feita com um vetor, de modo que inserções e consultas
+são em O(1), de modo que o tamanho do arquivo domina assintoticamente a operação pela repetição.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Análise de compressão}
+\subsection{constituicao1988.txt:}
+\space \par O arquivo original tem tamanho em bits: 5214320
+\space \par O arquivo comprimido tem tamanho em bits: 711088
+\space \par A taxa de compressão é de 13.6372 \% 
+
+\subsection{dom\_casmurro.txt:}
+\space \par O arquivo original tem tamanho em bits: 3276880
+\space \par O arquivo comprimido tem tamanho em bits: 592576
+\space \par A taxa de compressão é de  18.0835\% 
+
+\subsection{os\_lusiadas.txt:} 
+\space \par O arquivo original tem tamanho em bits: 2756304
+\space \par O arquivo comprimido tem tamanho em bits: 519544
+\space \par A taxa de compressão é de 18.8493\%
+
+\subsection{1-LoremIpsum.txt:} 
+\space \par O arquivo original tem tamanho em bits: 8160608
+\space \par O arquivo comprimido tem tamanho em bits: 909440
+\space \par A taxa de compressão é de 11.1443\%
+
+\subsection{2-CatchingFire.txt:} 
+\space \par O arquivo original tem tamanho em bits: 8160608
+\space \par O arquivo comprimido tem tamanho em bits: 909440
+\space \par A taxa de compressão é de 11.1443\%
+
+\subsection{3-AMetamorfose.txt}                            
+\space \par O arquivo original tem tamanho em bits: 966328
+\space \par O arquivo comprimido tem tamanho em bits: 191400
+\space \par A taxa de compressão é de 19.8069\%
+
+\subsection{4-PoemaCarlosDrummond.txt}
+\space \par O arquivo original tem tamanho em bits: 43592
+\space \par O arquivo comprimido tem tamanho em bits: 13352
+\space \par A taxa de compressão é de 30.6295\%
+
+\subsection{	5-ADivinaComedia.txt}
+\space \par O arquivo original tem tamanho em bits: 5923112
+\space \par O arquivo comprimido tem tamanho em bits: 1.01318e+06
+\space \par A taxa de compressão é de 17.1055%
+
+\subsection{	6-MemoriasPostumasDeBrasCubas.txt            }                                 
+\space \par O arquivo original tem tamanho em bits: 2979296
+\space \par O arquivo comprimido tem tamanho em bits: 538456
+\space \par A taxa de compressão é de 18.0733%
+
+\subsection{	7-OCortico.txt                  }        
+\space \par O arquivo original tem tamanho em bits: 4016248
+\space \par O arquivo comprimido tem tamanho em bits: 709232
+\space \par A taxa de compressão é de 17.6591%
+
+\subsection{	8-TristeFimDePolicarpoQuaresma.txt}                                              
+\space \par O arquivo original tem tamanho em bits: 3253912
+\space \par O arquivo comprimido tem tamanho em bits: 601416
+\space \par A taxa de compressão é de 18.4829%
+
+\subsection{	9-OMulato.txt}                         
+\space \par O arquivo original tem tamanho em bits: 4662848
+\space \par O arquivo comprimido tem tamanho em bits: 801736
+\space \par A taxa de compressão é de 17.1941%
+
+\subsection{	10-PequenoPrincipe.txt}                                  
+\space \par O arquivo original tem tamanho em bits: 631584
+\space \par O arquivo comprimido tem tamanho em bits: 130272
+\space \par A taxa de compressão é de 20.6262%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\section{Conclusão}
+\par A compreensão e desenvolvimento do trabalho em si se deu com um pouco de dificuldade, sendo necessário extrapolar um pouco do horário para finalizar o relatório.
+\par Além diss, em tamanho real, não teórico, o único arquivo em que a compressão se deu menor que o texto original foi o LoremIpsum. Creio que isso se deve ao fato de ser um texto com palavras de maior tamanho, de modo que o arquivo .z78 gerado conseguiu reduzir essa média.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section*{Referências}
+
+\par \textbf{VIMIEIRO, Renato} Slides virtuais da disciplina de Algoritmos 2 (2023).
+\par Disponibilizado via Teams. Departamento de Ciência da Computação. Universidade Federal de Minas Gerais. Belo Horizonte. Acesso diversas vezes.
+\par \textbf{FAROOQ, Omar}"Std Filesystem C++"
+\par Disponível em: \textless https://linuxhint.com/std-filesystem-cpp/. Acesso em 9 mai. 2023
+\par \textbf{Wikipedia} "LZ78"
+\par Disponível em: \textless https://pt.wikipedia.org/wiki/LZ78. Acesso em 9 mai. 2023
+
+
+\end{document}
